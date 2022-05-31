@@ -78,17 +78,27 @@ When adding a new instrument, there are several steps to be taken as follows, </
         book_depth: 0
   ```
   **Note: *port* value has to be unique(also in the correct range) for every instrument**
-  2. pick the desired orderbook, order type and matching policy type and then assemble them from `assemble_components(...)`in main.cpp
+  2. pick the desired orderbook, order type and matching policy type and then assemble them from `assemble_components(...)`in main.cpp </br>
   ```
   ...
   ...
   else if (symbol == "E_TSLA")
   {
-      cache.E_AAPL = std::make_unique<Streamer<regular_lv2_book<lv_2_order, regular_lv2_book_policy>>>(io_context, port_v, book_depth);
+      cache.E_TSLA = std::make_unique<Streamer<regular_lv2_book<lv_2_order, regular_lv2_book_policy>>>(io_context, port_v, book_depth);
   }
   ```
   **Note: the components picked has to be logical reasonable, say, you can't use lv3_book_policy on a lv2_book, it won't compile.** </br>
-  (what if one or more components provided does not satifies you needs ? next section will answer it :) )
+  *(what if one or more components provided does not satifies you needs ? next section will answer it :) )* </br>
+  3. add the corresponding assembled pipeline into the cache struct
+  (we need to ensure the stream pipeline live before asio loop dies. )
+  ```
+  struct streamers_cache
+  {
+    ...
+    ...
+    std::unique_ptr<streamer<regular_lv2_book<lv_2_order, regular_lv2_book_policy>>> E_TSLA;
+  }
+  ```
 ## User-defined Component Example
 
 ## Build and Run
