@@ -1,4 +1,4 @@
-# crtp-based exchange mathing-engine simulator framework
+# crtp-based exchange matching-engine simulator framework
 
 ## Motivation
   Run-time polymorphism has a big overhead if a program uses dynamic dispatch over and over due to vtable lookup and memory cache misses. For a program that needs performance, we'd better design a framework that will avoid dynamic dispatch while keep code abstraction and reusability.
