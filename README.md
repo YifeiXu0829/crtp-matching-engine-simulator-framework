@@ -12,6 +12,11 @@
     2. [boost asio 1.76.0](https://www.boost.org/doc/libs/1_76_0/doc/html/boost_asio.html)
     
 ## Components and Usage
+  - **Yaml file configuration**
+  - **Streamer**
+  - **Order**
+  - **Order Book**
+  - **Matching Policy**
 
 ## User-defined Component Example
 
