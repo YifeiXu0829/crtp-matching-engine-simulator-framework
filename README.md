@@ -16,3 +16,9 @@
 ## User-defined Component Example
 
 ## Build and Run
+  this project uses Cmake (requires minimum version of 3.5.0) to build, and a build script is provided.
+  from project root directory, run </br>
+  `./build_script` </br>
+  and exeutalbe will be built at </br>
+  `./build/main`
+  
