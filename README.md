@@ -64,8 +64,9 @@
     std::unordered_map<order_side, std::map<price_ty, std::vector<Order_Ty>>> book_;
     ```
     Users should pick the right book (or customize a new book) for a newly added instrument.
-  - **Matching Policy**
-
+  - **Matching Policy**  
+    A matching policy describe what expected changes to a order book should be after received an order action (new_order, replace_order, cancel_order) </br>
+    different instruments could have differnt policies when receiving a same action.
 ## Create a new instrument pipeline
 
 ## User-defined Component Example
