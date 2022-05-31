@@ -77,20 +77,21 @@ private:
     std::unordered_map<order_side, std::map<price_ty, std::vector<Order_Ty>>> book_;
 };
 
-class regular_lv2_book : public level_2_book<regular_lv2_book, lv_2_order, regular_lv2_book_policy>
+template <typename order_ty, typename policy_ty>
+class regular_lv2_book : public level_2_book<regular_lv2_book<order_ty, policy_ty>, order_ty, policy_ty>
 {
-using base = book_base<regular_lv2_book, lv_2_order, regular_lv2_book_policy>;
-using level_book_base = level_2_book<regular_lv2_book, lv_2_order, regular_lv2_book_policy>;
+using level_book_base = level_2_book<regular_lv2_book, order_ty, policy_ty>;
 public:
     explicit regular_lv2_book(int max_depth):level_book_base(max_depth)
     {
     }
 };
 
-class regular_lv3_book : public level_3_book<regular_lv3_book, lv_3_order, regular_lv3_book_policy>
+template <typename order_ty, typename policy_ty>
+class regular_lv3_book : public level_3_book<regular_lv3_book<order_ty, policy_ty>, order_ty, policy_ty>
 {
-using base = book_base<regular_lv3_book, lv_3_order, regular_lv3_book_policy>;
-using level_book_base = level_3_book<regular_lv3_book, lv_3_order, regular_lv3_book_policy>;
+using base = book_base<regular_lv3_book<order_ty, policy_ty>, order_ty, policy_ty>;
+using level_book_base = level_3_book<regular_lv3_book, order_ty, policy_ty>;
 public:
     explicit regular_lv3_book(int max_depth):level_book_base(max_depth)
     {

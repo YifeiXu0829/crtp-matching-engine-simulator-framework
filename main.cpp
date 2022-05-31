@@ -6,8 +6,8 @@
 // place to preserve each streamer object so they will live with io_context
 struct streamers_cache
 {
-    std::unique_ptr<streamer<regular_lv2_book>> E_AAPL;
-    std::unique_ptr<streamer<regular_lv3_book>> EO_AAPL_2022_06_17_16050;
+    std::unique_ptr<streamer<regular_lv2_book<lv_2_order, regular_lv2_book_policy>>> E_AAPL;
+    std::unique_ptr<streamer<regular_lv3_book<lv_3_order, regular_lv3_book_policy>>> EO_AAPL_2022_06_17_16050;
     std::unique_ptr<streamer<user_defined_lv3_book_001>> F_VX;
 
     // new instrument should add a smart pointer here
@@ -35,11 +35,11 @@ void assemble_components(boost::asio::io_context& io_context, const auto& instru
 
     if (symbol == "E_AAPL")
     {
-        cache.E_AAPL = std::make_unique<Streamer<regular_lv2_book>>(io_context, port_v, book_depth);
+        cache.E_AAPL = std::make_unique<Streamer<regular_lv2_book<lv_2_order, regular_lv2_book_policy>>>(io_context, port_v, book_depth);
     }
     else if (symbol == "EO_AAPL_2022_06_17_16050")
     {
-        cache.EO_AAPL_2022_06_17_16050 = std::make_unique<Streamer<regular_lv3_book>>(io_context, port_v, book_depth);
+        cache.EO_AAPL_2022_06_17_16050 = std::make_unique<Streamer<regular_lv3_book<lv_3_order, regular_lv3_book_policy>>>(io_context, port_v, book_depth);
     }
     else if (symbol == "F_VX")
     {
