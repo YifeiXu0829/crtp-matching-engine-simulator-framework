@@ -31,6 +31,8 @@ struct order_base : std::enable_shared_from_this<Impl>
     quantity_ty qty;
     price_ty price;
     id_ty id;
+
+    auto& impl() { return *static_cast<Impl*>(this); }
 };
 
 struct lv_2_order : order_base<lv_2_order>

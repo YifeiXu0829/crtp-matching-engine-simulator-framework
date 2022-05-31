@@ -53,12 +53,10 @@ public:
     {
     }
 
-    auto& get_buy_side_book_access(){return buy_side_book_;}
-    auto& get_sell_side_book_access(){return sell_side_book_;}
+    auto& get_side_book_access(order_side side){return book_[side];}
 
 private:
-    std::map<price_ty, quantity_ty> buy_side_book_;
-    std::map<price_ty, quantity_ty> sell_side_book_;
+    std::unordered_map<order_side, std::map<price_ty, quantity_ty>> book_;
 };
 
 // level 3 order book provides deeper information on each price level with each order's priority.
@@ -73,28 +71,26 @@ public:
     {
     }
 
-    auto& get_buy_side_book_access(){return buy_side_book_;}
-    auto& get_sell_side_book_access(){return sell_side_book_;}
+    auto& get_side_book_access(order_side side){return book_[side];}
 
 private:
-    std::map<price_ty, std::vector<Order_Ty*>> buy_side_book_;
-    std::map<price_ty, std::vector<Order_Ty*>> sell_side_book_;
+    std::unordered_map<order_side, std::map<price_ty, std::vector<Order_Ty>>> book_;
 };
 
-class regular_lv2_book : public level_2_book<regular_lv2_book, lv_2_order, lv2_book_policy>
+class regular_lv2_book : public level_2_book<regular_lv2_book, lv_2_order, regular_lv2_book_policy>
 {
-using base = book_base<regular_lv2_book, lv_2_order, lv2_book_policy>;
-using level_book_base = level_2_book<regular_lv2_book, lv_2_order, lv2_book_policy>;
+using base = book_base<regular_lv2_book, lv_2_order, regular_lv2_book_policy>;
+using level_book_base = level_2_book<regular_lv2_book, lv_2_order, regular_lv2_book_policy>;
 public:
     explicit regular_lv2_book(int max_depth):level_book_base(max_depth)
     {
     }
 };
 
-class regular_lv3_book : public level_3_book<regular_lv3_book, lv_3_order, lv3_book_policy>
+class regular_lv3_book : public level_3_book<regular_lv3_book, lv_3_order, regular_lv3_book_policy>
 {
-using base = book_base<regular_lv3_book, lv_3_order, lv3_book_policy>;
-using level_book_base = level_3_book<regular_lv3_book, lv_3_order, lv3_book_policy>;
+using base = book_base<regular_lv3_book, lv_3_order, regular_lv3_book_policy>;
+using level_book_base = level_3_book<regular_lv3_book, lv_3_order, regular_lv3_book_policy>;
 public:
     explicit regular_lv3_book(int max_depth):level_book_base(max_depth)
     {
