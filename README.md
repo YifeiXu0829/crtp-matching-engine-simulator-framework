@@ -13,10 +13,60 @@
     
 ## Components and Usage
   - **Yaml file configuration**
-  - **Streamer**
-  - **Order**
-  - **Order Book**
+    upon startup, the program will read local file named *supported_instruments.yaml* with the following structure
+    ```
+    instruments_list:
+       <instrument_key1>:
+           <property1>: <value1>
+           <property2>: <value2>
+           ...
+       <instrument_key2>:
+           <property1>: <value1>
+           <property2>: <value2>
+           ...
+       ...
+    ```
+    an example would be
+    ```
+    instruments_list:
+      E_AAPL:
+        port: 6001
+        trading_symbol: "0x00000001"
+        type: Equity
+        book_depth: 0 
+      EO_AAPL_2022_06_17_16050:
+        port: 6002
+        trading_symbol: "0x00000002"
+        type: Equity_Option
+        strike: 160.50
+        expiration: 20220617
+        book_depth: 0
+      F_VX:
+        port: 6003
+        trading_symbol: "0x00000003"
+        type: Future
+        expiration: 20220624
+        book_depth: 10
+    ```
+    Note that, *<instrument_key>* has to be pre-set in the *main.cpp* so that the compiler will know what components will be assembled at compile time for this instrument. more details will follow at the *Create a new instrument pipeline* section.
+  - **Streamer**  
+    Each streamer component is created by each instrument supported in the yaml configuration file, and their main job is to accept client connections, and then passing order messages from client to the corresponding instrument order book.  
+    *all streamers IO are synchronized by boost asio library to ensure robustness, portability and performance.*
+  - **Order**  
+    Order component defines what properties an order should have. Depend on different expectations for different instruments, one can implement their own order type using provided crtp method to handle expected order string from client.
+  - **Order Book**  
+    An order book of an instrument describes what its book should look like. For example, a level_2_book only contains aggregated volume per price level, represented as
+    ```
+    std::unordered_map<order_side, std::map<price_ty, quantity_ty>> book_;
+    ```
+    where as a level_3_book will provide much deeper information, namely on each price level, level_3 book provides a list of orders ordered by priority, represented as
+    ```
+    std::unordered_map<order_side, std::map<price_ty, std::vector<Order_Ty>>> book_;
+    ```
+    Users should pick the right book (or customize a new book) for a newly added instrument.
   - **Matching Policy**
+
+## Create a new instrument pipeline
 
 ## User-defined Component Example
 
