@@ -88,7 +88,7 @@ When adding a new instrument, there are several steps to be taken as follows, </
   }
   ```
   **Note: the components picked has to be logical reasonable, say, you can't use lv3_book_policy on a lv2_book, it won't compile.** </br>
-  *(what if one or more components provided does not satifies you needs ? next section will answer it :) )* </br>
+  *(what if one or more existing components does not satifies you needs ? next section will answer it :) )* </br>
   3. add a smart pointer for the corresponding assembled pipeline into the cache struct
   (we need to ensure the stream pipeline live before asio loop dies. )
   ```
