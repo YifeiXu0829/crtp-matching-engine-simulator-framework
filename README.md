@@ -101,7 +101,100 @@ When adding a new instrument, there are several steps to be taken as follows, </
   ```
 ## User-defined Component Example
   If any of the existing components can't satisfy a user's need, one can define their own type (book, order or matching_policy)
+  say, for a customized order type to handle order string from clients due to different messaging policy
+  (messaging policy actually can be used as crtp as well .. )
+  ```
+  struct user_defined_order : order_base<user_defined_order>
+  {
+    // type can be re-defined
+    using quantity_ty = double; // support fractional quantity
+    using order_base<user_defined_order>::price_ty;
+    explicit user_defined_order(std::string s) : order_base(std::move(s)){}
 
+    /* shadow */
+    void make_order(std::string order_string)
+    {
+        // one can customize the way to handle order_string depending on its messaging policy with clients
+    }
+
+    // more fields can be added
+    price_ty stop_limit_price;
+  };
+  ```
+  say, for a customized matching_policy_type to handle actions that adjust the book differently
+  ```
+  struct user_defined_lv3_matching_policy : lv3_book_policy<user_defined_lv3_matching_policy>
+  {
+    /* shadow */
+    template <typename Order_Ty, typename Book_Ty>
+    void add_order(Order_Ty order, Book_Ty& book)
+    {
+        /* Implementation to add order in to the book differently*/
+    }
+
+    /* shadow */
+    template <typename Order_Ty, typename Book_Ty>
+    bool remove_order(Order_Ty& order, Book_Ty& book)
+    {
+        /* Implementation to remove order our of the book differently*/
+        return false;
+    }
+
+    /* shadow */
+    template <typename Order_Ty, typename Book_Ty>
+    bool match(Order_Ty order, Book_Ty& book)
+    {
+        /* Implementation regarding fills mechanism when matching */
+        cout << "calling user_defined_lv3_matching_policy::match(...)" <<endl;
+        return true;
+    }
+  };
+  ```
+  or totally create a new policy that is neither a lv_2_book_policy or lv_3_book_policy
+  ```
+  struct user_defined_matching_policy : matching_policy_base<user_defined_matching_policy>
+  {
+    /* shadow */
+    template <typename Order_Ty, typename Book_Ty>
+    void handle_order_new(Order_Ty order, Book_Ty& book)
+    {
+        cout << "calling user_defined_matching_policy::handle_order_new(...)" <<endl;
+    }
+
+    /* shadow */
+    template <typename Order_Ty, typename Book_Ty>
+    void handle_order_replace(Order_Ty order, Book_Ty& book)
+    {
+        cout << "calling user_defined_matching_policy::handle_order_replace(...)" <<endl;
+    }
+
+    /* shadow */
+    template <typename Order_Ty, typename Book_Ty>
+    void handle_order_cancel(Order_Ty order, Book_Ty& book)
+    {
+        cout << "calling user_defined_matching_policy::handle_order_cancel(...)" <<endl;
+    }
+  };
+  ```
+  finally, a book type can be customized as well
+  ```
+  template <typename order_ty, typename policy_ty>
+  class user_defined_lv3_book_001 : public level_3_book<user_defined_lv3_book_001<order_ty, policy_ty>, order_ty, policy_ty>
+  {
+    using base = book_base<user_defined_lv3_book_001<order_ty, policy_ty>, order_ty, policy_ty>;
+    using level_book_base = level_3_book<user_defined_lv3_book_001<order_ty, policy_ty>, order_ty, policy_ty>;
+
+    public:
+    explicit user_defined_lv3_book_001(int max_depth):level_book_base(max_depth)
+    {
+    }
+    
+    private:
+    // new containers that represent the book ?
+    // methods that get access into the book memory ?
+  };
+  ```
+  Of course, the user-defined book has to work/compile with existing/newly-created order-type and policy_type.
 ## Build and Run
   this project uses Cmake (requires minimum version of 3.5.0) to build, and a build script is provided.
   from project root directory, run </br>
