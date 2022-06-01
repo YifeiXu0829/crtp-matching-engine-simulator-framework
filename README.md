@@ -55,7 +55,7 @@
   - **Order**  
     Order component defines what properties an order should have. Depend on different expectations for different instruments, one can implement their own order type using provided crtp method to handle expected order string from client.
   - **Order Book**  
-    An order book of an instrument describes what its book should look like. For example, a level_2_book only contains aggregated volume per price level, represented as
+    An order book of an instrument describes what its book should look like. Two exsiting interfaces from a generic order book are level_2_book and level_3_book. For explanation, a level_2_book only contains aggregated volume per price level, represented as
     ```
     std::unordered_map<order_side, std::map<price_ty, quantity_ty>> book_;
     ```
@@ -99,7 +99,7 @@ When adding a new instrument, there are several steps to be taken as follows, </
     std::unique_ptr<streamer<regular_lv2_book<lv_2_order, regular_lv2_book_policy>>> E_TSLA;
   }
   ```
-## User-defined Component Example
+## User-defined Component Example (with minimum implementation)
   If any of the existing components can't satisfy a user's need, one can define their own type (book, order or matching_policy)
   say, for a customized order type to handle order string from clients due to different messaging policy
   (messaging policy actually can be used as crtp as well .. )
@@ -176,22 +176,20 @@ When adding a new instrument, there are several steps to be taken as follows, </
     }
   };
   ```
-  finally, a book type can be customized as well
+  finally, a new book type can be customized as well
   ```
   template <typename order_ty, typename policy_ty>
-  class user_defined_lv3_book_001 : public level_3_book<user_defined_lv3_book_001<order_ty, policy_ty>, order_ty, policy_ty>
+  class user_defined_book_001 : public book_base<user_defined_book_001<order_ty, policy_ty>, order_ty, policy_ty>
   {
-    using base = book_base<user_defined_lv3_book_001<order_ty, policy_ty>, order_ty, policy_ty>;
-    using level_book_base = level_3_book<user_defined_lv3_book_001<order_ty, policy_ty>, order_ty, policy_ty>;
-
+    using base = book_base<user_defined_book_001<order_ty, policy_ty>, order_ty, policy_ty>;
     public:
-    explicit user_defined_lv3_book_001(int max_depth):level_book_base(max_depth)
-    {
-    }
-    
+      explicit user_defined_book_001(int max_depth):base(max_depth)
+      {
+      }
+
     private:
     // new containers that represent the book ?
-    // methods that get access into the book memory ?
+    // methods that cooperate with policy_ty ?
   };
   ```
   Of course, the user-defined book has to work/compile with existing/newly-created order-type and policy_type.
