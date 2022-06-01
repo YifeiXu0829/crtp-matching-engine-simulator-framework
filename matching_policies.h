@@ -158,8 +158,34 @@ struct regular_lv3_book_policy : lv3_book_policy<regular_lv3_book_policy>
     }
 };
 
-
 // one can customize their own matching policy here
+
+struct user_defined_lv3_matching_policy : lv3_book_policy<user_defined_lv3_matching_policy>
+{
+    /* shadow */
+    template <typename Order_Ty, typename Book_Ty>
+    void add_order(Order_Ty order, Book_Ty& book)
+    {
+        /* Implementation to add order in to the book differently*/   
+    }
+
+    /* shadow */
+    template <typename Order_Ty, typename Book_Ty>
+    bool remove_order(Order_Ty& order, Book_Ty& book)
+    {
+        /* Implementation to remove order our of the book differently*/
+        return false;
+    }
+
+    /* shadow */
+    template <typename Order_Ty, typename Book_Ty>
+    bool match(Order_Ty order, Book_Ty& book)
+    {
+        /* Implementation regarding fills mechanism when matching */
+        cout << "calling user_defined_lv3_matching_policy::match(...)" <<endl;
+        return true;
+    }
+};
 
 struct user_defined_matching_policy : matching_policy_base<user_defined_matching_policy>
 {
