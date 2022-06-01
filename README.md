@@ -77,14 +77,14 @@ When adding a new instrument, there are several steps to be taken as follows, </
         type: Equity
         book_depth: 0
   ```
-  **Note: *port* value has to be unique(also in the correct range) for every instrument**
+  **Note: *port* value has to be unique(also in the correct range) for every instrument** </br>
   2. pick the desired orderbook, order type and matching policy type and then assemble them from `assemble_components(...)`in main.cpp </br>
   ```
   ...
   ...
   else if (symbol == "E_TSLA")
   {
-      cache.E_TSLA = std::make_unique<Streamer<regular_lv2_book<lv_2_order, regular_lv2_book_policy>>>(io_context, port_v, book_depth);
+      cache.E_TSLA = assembly_helper<streamer, regular_lv2_book, lv_2_order, regular_lv2_book_policy>(io_context, port_v, book_depth);
   }
   ```
   **Note: the components picked has to be logical reasonable, say, you can't use lv3_book_policy on a lv2_book, it won't compile.** </br>
@@ -100,6 +100,7 @@ When adding a new instrument, there are several steps to be taken as follows, </
   }
   ```
 ## User-defined Component Example
+  If any of the existing components can't satisfy a user's need, one can define their own type (book, order or matching_policy)
 
 ## Build and Run
   this project uses Cmake (requires minimum version of 3.5.0) to build, and a build script is provided.
