@@ -13,7 +13,16 @@ struct streamers_cache
     // new instrument should add a smart pointer here
 };
 
-template <template<typename >typename Streamer>
+template <template<typename >typename streamer_ty, template<typename, typename> typename book_ty, typename order_ty, typename policy_ty, typename ... Args>
+auto assembly_helper(Args&&... args)
+{
+    return std::make_unique<
+                    streamer_ty<
+                        book_ty<order_ty, policy_ty>
+                                >
+                        >(std::forward<Args>(args)...);
+}
+
 void assemble_components(boost::asio::io_context& io_context, const auto& instrument_root, auto& cache)
 {
     auto symbol = instrument_root.first.template as<std::string>();
@@ -35,15 +44,15 @@ void assemble_components(boost::asio::io_context& io_context, const auto& instru
 
     if (symbol == "E_AAPL")
     {
-        cache.E_AAPL = std::make_unique<Streamer<regular_lv2_book<lv_2_order, regular_lv2_book_policy>>>(io_context, port_v, book_depth);
+        cache.E_AAPL = assembly_helper<streamer, regular_lv2_book, lv_2_order, regular_lv2_book_policy>(io_context, port_v, book_depth);
     }
     else if (symbol == "EO_AAPL_2022_06_17_16050")
     {
-        cache.EO_AAPL_2022_06_17_16050 = std::make_unique<Streamer<regular_lv3_book<lv_3_order, regular_lv3_book_policy>>>(io_context, port_v, book_depth);
+        cache.EO_AAPL_2022_06_17_16050 = assembly_helper<streamer, regular_lv3_book, lv_3_order, regular_lv3_book_policy>(io_context, port_v, book_depth);
     }
     else if (symbol == "F_VX")
     {
-        cache.F_VX = std::make_unique<Streamer<user_defined_lv3_book_001<user_defined_order, user_defined_matching_policy>>>(io_context, port_v, book_depth);
+        cache.F_VX = assembly_helper<streamer, user_defined_lv3_book_001, user_defined_order, user_defined_matching_policy>(io_context, port_v, book_depth);
     }
 
     // new instrument will tell compiler what component to be assembled here
@@ -61,7 +70,7 @@ int main()
         {
             for (const auto& instrument : instruments)
             {
-                assemble_components<streamer>(io_context, instrument, cache);
+                assemble_components(io_context, instrument, cache);
             }
         }
 
