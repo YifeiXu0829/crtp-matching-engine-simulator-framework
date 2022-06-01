@@ -200,3 +200,37 @@ When adding a new instrument, there are several steps to be taken as follows, </
   and exeutalbe will be built at </br>
   `./build/main`
   
+## APPENDIX
+  this code has been tested and built on
+  ```
+  % g++ --version
+  Apple clang version 13.1.6 (clang-1316.0.21.2)
+  Target: arm64-apple-darwin21.4.0
+  Thread model: posix
+  InstalledDir: /Library/Developer/CommandLineTools/usr/bin
+  ```
+  
+  with Cmake
+```
+  % ./build_script
+-- The C compiler identification is AppleClang 13.1.6.13160021
+-- The CXX compiler identification is AppleClang 13.1.6.13160021
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /Library/Developer/CommandLineTools/usr/bin/cc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /Library/Developer/CommandLineTools/usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Found Boost: /opt/homebrew/lib/cmake/Boost-1.78.0/BoostConfig.cmake (found suitable version "1.78.0", minimum required is "1.78.0")  
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /Users/yifeix/Documents/git/crtp-matching-engine-framework/build
+[ 50%] Building CXX object CMakeFiles/main.dir/main.cpp.o
+[100%] Linking CXX executable main
+[100%] Built target main
+```
+  
