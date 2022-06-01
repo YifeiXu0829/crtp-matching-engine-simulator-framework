@@ -101,13 +101,16 @@ public:
 // one can customize book here
 
 template <typename order_ty, typename policy_ty>
-class user_defined_lv3_book_001 : public level_3_book<user_defined_lv3_book_001<order_ty, policy_ty>, order_ty, policy_ty>
+class user_defined_book_001 : public book_base<user_defined_book_001<order_ty, policy_ty>, order_ty, policy_ty>
 {
-using base = book_base<user_defined_lv3_book_001<order_ty, policy_ty>, order_ty, policy_ty>;
-using level_book_base = level_3_book<user_defined_lv3_book_001<order_ty, policy_ty>, order_ty, policy_ty>;
-
+using base = book_base<user_defined_book_001<order_ty, policy_ty>, order_ty, policy_ty>;
 public:
-    explicit user_defined_lv3_book_001(int max_depth):level_book_base(max_depth)
+    explicit user_defined_book_001(int max_depth):base(max_depth)
     {
     }
+
+private:
+    // new containers that represent the book ?
+    // methods that cooperate with policy_ty ?
 };
+

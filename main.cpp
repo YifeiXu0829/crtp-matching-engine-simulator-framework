@@ -8,7 +8,7 @@ struct streamers_cache
 {
     std::unique_ptr<streamer<regular_lv2_book<lv_2_order, regular_lv2_book_policy>>> E_AAPL;
     std::unique_ptr<streamer<regular_lv3_book<lv_3_order, regular_lv3_book_policy>>> EO_AAPL_2022_06_17_16050;
-    std::unique_ptr<streamer<user_defined_lv3_book_001<user_defined_order, user_defined_matching_policy>>> F_VX;
+    std::unique_ptr<streamer<user_defined_book_001<user_defined_order, user_defined_matching_policy>>> F_VX;
 
     // new instrument should add a smart pointer here
 };
@@ -52,7 +52,7 @@ void assemble_components(boost::asio::io_context& io_context, const auto& instru
     }
     else if (symbol == "F_VX")
     {
-        cache.F_VX = assembly_helper<streamer, user_defined_lv3_book_001, user_defined_order, user_defined_matching_policy>(io_context, port_v, book_depth);
+        cache.F_VX = assembly_helper<streamer, user_defined_book_001, user_defined_order, user_defined_matching_policy>(io_context, port_v, book_depth);
     }
 
     // new instrument will tell compiler what component to be assembled here
